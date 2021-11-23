@@ -233,36 +233,28 @@ pub mod x86_64 {
         println!("];");
     }
 
-    #[cfg(test)]
-    mod tests {
-        use super::{
-            bitmap_ones, bitmap_ones_a, bitmap_ones_avx2, bitmap_ones_avx2_small_lut,
-            bitmap_ones_b, bitmap_ones_naive, random_bitmap,
-        };
+    #[test]
+    fn avx2() {
+        let num_bits = 64;
+        let bitmap = super::random_bitmap(num_bits, 0.5);
+        println!(
+            "{:#b} {:.2}",
+            bitmap[0],
+            super::bitmap_ones(&bitmap) as f64 / num_bits as f64
+        );
 
-        #[test]
-        fn avx2() {
-            let num_bits = 64;
-            let bitmap = random_bitmap(num_bits, 0.5);
-            println!(
-                "{:#b} {:.2}",
-                bitmap[0],
-                bitmap_ones(&bitmap) as f64 / num_bits as f64
-            );
-
-            let mut expected = Vec::with_capacity(num_bits);
-            let mut faster = Vec::with_capacity(num_bits);
-            let mut faster2 = Vec::with_capacity(num_bits);
-            bitmap_ones_naive(&bitmap, &mut expected);
-            unsafe {
-                bitmap_ones_avx2(&bitmap, &mut faster);
-            }
-            bitmap_ones_avx2_small_lut(&bitmap, &mut faster2);
-            // println!("{:?}", expected);
-            // println!("{:?}", faster);
-            assert_eq!(expected, faster);
-            assert_eq!(expected, faster2);
+        let mut expected = Vec::with_capacity(num_bits);
+        let mut faster = Vec::with_capacity(num_bits);
+        let mut faster2 = Vec::with_capacity(num_bits);
+        super::bitmap_ones_naive(&bitmap, &mut expected);
+        unsafe {
+            bitmap_ones_avx2(&bitmap, &mut faster);
         }
+        bitmap_ones_avx2_small_lut(&bitmap, &mut faster2);
+        // println!("{:?}", expected);
+        // println!("{:?}", faster);
+        assert_eq!(expected, faster);
+        assert_eq!(expected, faster2);
     }
 
     const fn lookup_row_u8(bytes: [u8; 8]) -> u64 {

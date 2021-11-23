@@ -1,17 +1,14 @@
 use criterion::{criterion_group, criterion_main, Criterion, Throughput};
+#[cfg(all(target_arch = "aarch64", feature = "aarch64-simd"))]
+use simd_stuff::unpack_bitmap::aarch64;
 #[cfg(all(
     any(target_arch = "x86", target_arch = "x86_64"),
     target_feature = "avx2"
 ))]
-use simd_stuff::unpack_bitmap::{
-    bitmap_ones, bitmap_ones_a, bitmap_ones_avx2, bitmap_ones_avx2_small_lut,
-};
-#[cfg(all(target_arch = "aarch64", feature = "aarch64-simd"))]
-use simd_stuff::unpack_bitmap::aarch64;
+use simd_stuff::unpack_bitmap::x86_64::{bitmap_ones_avx2, bitmap_ones_avx2_small_lut};
 use simd_stuff::unpack_bitmap::{
     bitmap_ones, bitmap_ones_a, bitmap_ones_b, bitmap_ones_naive, random_bitmap,
 };
-
 
 pub fn criterion_benchmark(c: &mut Criterion) {
     let size = 1024;
@@ -77,7 +74,7 @@ pub fn criterion_benchmark(c: &mut Criterion) {
             &size,
             |b, &_size| {
                 b.iter(|| {
-                    unsafe { bitmap_ones_avx2_small_lut(&bitmap, &mut output) };
+                    bitmap_ones_avx2_small_lut(&bitmap, &mut output);
                     output.clear();
                 });
             },
