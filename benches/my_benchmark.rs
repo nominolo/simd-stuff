@@ -1,5 +1,4 @@
 use criterion::{Criterion, Throughput, criterion_group, criterion_main, measurement::{Measurement, ValueFormatter}};
-use criterion_cycles_per_byte::CyclesPerByte;
 use rand::Rng;
 #[cfg(all(target_arch = "aarch64", feature = "aarch64-simd"))]
 use simd_stuff::unpack_bitmap::aarch64;

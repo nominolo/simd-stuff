@@ -5,3 +5,4 @@
 // #![feature(aarch64_target_feature)]
 
 pub mod unpack_bitmap;
+pub mod unpack_bitmap_masked;
