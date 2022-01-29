@@ -1,3 +1,3 @@
 fn main() {
-    println!("Hello, world!");
+    simd_stuff::jit::try_it();
 }

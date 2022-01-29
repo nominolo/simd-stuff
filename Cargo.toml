@@ -10,6 +10,8 @@ aarch64-simd = []  # nightly only
 
 [dependencies]
 rand = "0.8"
+memmap2 = "0.5"
+capstone = "0.10"
 
 [dev-dependencies]
 criterion = "0.3"

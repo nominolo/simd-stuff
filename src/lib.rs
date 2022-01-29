@@ -6,3 +6,5 @@
 
 pub mod unpack_bitmap;
 pub mod unpack_bitmap_masked;
+
+pub mod jit;
